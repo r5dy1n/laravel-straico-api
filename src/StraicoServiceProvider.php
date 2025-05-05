@@ -37,25 +37,14 @@ class StraicoServiceProvider extends ServiceProvider
             $config = $app->make('config');
             $apiKey = $config->get('straico.api_key');
             $baseUrl = $config->get('straico.base_url');
+            $timeout = $config->get('straico.timeout', 60); // Default timeout 60 seconds, matching service default
 
-            if (empty($apiKey)) {
-                throw new \InvalidArgumentException('Straico API key is missing. Please set it in your .env file or config/straico.php.');
-            }
-             if (empty($baseUrl)) {
-                throw new \InvalidArgumentException('Straico Base URL is missing. Please set it in your .env file or config/straico.php.');
-            }
+            // Validation is now handled within StraicoService constructor
+            // if (empty($apiKey)) { ... }
+            // if (empty($baseUrl)) { ... }
 
-            $client = new Client([
-                'base_uri' => $baseUrl,
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $apiKey,
-                    'Accept' => 'application/json',
-                    'Content-Type' => 'application/json',
-                ],
-                'timeout' => $config->get('straico.timeout', 30), // Default timeout 30 seconds
-            ]);
-
-            return new StraicoService($client);
+            // Pass config values directly to the service constructor
+            return new StraicoService($apiKey, $baseUrl, $timeout);
         });
 
         $this->app->alias(StraicoService::class, 'straico');

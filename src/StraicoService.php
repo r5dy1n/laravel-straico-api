@@ -9,10 +9,35 @@ use Psr\Http\Message\ResponseInterface;
 class StraicoService
 {
     protected Client $client;
+    protected string $apiKey;
+    protected string $baseUrl;
+    protected int $timeout;
 
-    public function __construct(Client $client)
+    public function __construct(string $apiKey, string $baseUrl, int $timeout = 60)
     {
-        $this->client = $client;
+        if (empty($apiKey)) {
+            throw new \InvalidArgumentException('Straico API key is required.');
+        }
+        if (empty($baseUrl)) {
+            throw new \InvalidArgumentException('Straico Base URL is required.');
+        }
+
+        $this->apiKey = $apiKey;
+        // Ensure base URL doesn't have a trailing slash for Guzzle base_uri
+        $this->baseUrl = rtrim($baseUrl, '/');
+        $this->timeout = $timeout;
+
+        $this->client = new Client([
+            // Base URI is used for relative paths in request methods (like v1 endpoints)
+            'base_uri' => $this->baseUrl . '/', // Add trailing slash here for base_uri
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->apiKey,
+                'Accept' => 'application/json',
+                // Content-Type is set per request type (json or multipart)
+            ],
+            'timeout' => $this->timeout,
+            'http_errors' => false, // Handle errors manually
+        ]);
     }
 
     /**

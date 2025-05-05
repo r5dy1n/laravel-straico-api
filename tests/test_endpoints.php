@@ -3,7 +3,6 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 use Dotenv\Dotenv;
-use GuzzleHttp\Client;
 use r5dy1n\Straico\StraicoService;
 
 // --- Configuration ---
@@ -24,19 +23,9 @@ if (!$baseUrl) {
 }
 
 // --- Service Instantiation ---
-$guzzleClient = new Client([
-    // Base URI will be combined with endpoint paths (v0/v1) in the service methods
-    'base_uri' => $baseUrl . '/', // Ensure trailing slash for relative paths
-    'headers' => [
-        'Authorization' => 'Bearer ' . $apiKey,
-        'Accept' => 'application/json',
-        // Content-Type is set per request type (json or multipart)
-    ],
-    'timeout' => $timeout,
-    'http_errors' => false, // Handle errors manually in the service class
-]);
-
-$straico = new StraicoService($guzzleClient);
+// The StraicoService now handles Guzzle client creation internally.
+// We pass the configuration directly to its constructor.
+$straico = new StraicoService($apiKey, $baseUrl, $timeout);
 
 // --- Helper Function for Output ---
 function runTest(string $testName, callable $testFunc)
