@@ -1,0 +1,44 @@
+{
+    "name": "r5dy1n/laravel-straico-api",
+    "description": "A Laravel package to interact with the Straico API",
+    "keywords": ["laravel", "straico", "api"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Raymond Yan",
+            "email": "r5dy1n.github@serf.me"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "illuminate/support": "^9.0|^10.0|^11.0",
+        "illuminate/http": "^9.0|^10.0|^11.0",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "require-dev": {
+        "vlucas/phpdotenv": "^5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "r5dy1n\\Straico\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "r5dy1n\\Straico\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "r5dy1n\\Straico\\StraicoServiceProvider"
+            ],
+            "aliases": {
+                "Straico": "r5dy1n\\Straico\\Facades\\Straico"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
